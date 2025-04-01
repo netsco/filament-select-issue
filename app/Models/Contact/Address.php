@@ -7,37 +7,6 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-/**
- * @property int $id
- * @property int $contact_id
- * @property int $type_id
- * @property string|null $address
- * @property string|null $city
- * @property string|null $region
- * @property string|null $postcode
- * @property bool $is_primary
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read mixed $display_comma
- * @property-read mixed $display_nl
- * @property-read DataType|null $type
- *
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Address newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Address newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Address query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Address whereAddress($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Address whereCity($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Address whereContactId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Address whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Address whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Address whereIsPrimary($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Address wherePostcode($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Address whereRegion($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Address whereTypeId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Address whereUpdatedAt($value)
- *
- * @mixin \Eloquent
- */
 class Address extends Model
 {
     protected $table = 'contacts_addresses';

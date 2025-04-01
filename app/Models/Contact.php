@@ -21,92 +21,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-/**
- * @property int $id
- * @property ContactType $type
- * @property string|null $company
- * @property string|null $title
- * @property string|null $first_name
- * @property string|null $last_name
- * @property string|null $display_name
- * @property string|null $job_title
- * @property string|null $background_info
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Address> $additionalAddresses
- * @property-read int|null $additional_addresses_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Email> $additionalEmails
- * @property-read int|null $additional_emails_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Tel> $additionalTels
- * @property-read int|null $additional_tels_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Address> $addresses
- * @property-read int|null $addresses_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, DataType> $categories
- * @property-read int|null $categories_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Company> $companies
- * @property-read int|null $companies_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, CustomField> $customFields
- * @property-read int|null $custom_fields_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Date> $dates
- * @property-read int|null $dates_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Email> $emails
- * @property-read int|null $emails_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Contact> $employeeCompanies
- * @property-read int|null $employee_companies_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Contact> $employeeContacts
- * @property-read int|null $employee_contacts_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Company> $employees
- * @property-read int|null $employees_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Event> $events
- * @property-read int|null $events_count
- * @property-read mixed $name
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Note> $notes
- * @property-read int|null $notes_count
- * @property-read Address|null $primaryAddress
- * @property-read Company|null $primaryCompany
- * @property-read Email|null $primaryEmail
- * @property-read Tel|null $primaryTel
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Event> $relatedEvents
- * @property-read int|null $related_events_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, SocialMedia> $socialMedia
- * @property-read int|null $social_media_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, DataType> $sources
- * @property-read int|null $sources_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Task> $tasks
- * @property-read int|null $tasks_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Tel> $tels
- * @property-read int|null $tels_count
- * @property-read \App\Models\User|null $user
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Website> $websites
- * @property-read int|null $websites_count
- *
- * @method static Builder<static>|Contact company()
- * @method static Builder<static>|Contact newModelQuery()
- * @method static Builder<static>|Contact newQuery()
- * @method static Builder<static>|Contact onlyTrashed()
- * @method static Builder<static>|Contact person()
- * @method static Builder<static>|Contact query()
- * @method static Builder<static>|Contact whereBackgroundInfo($value)
- * @method static Builder<static>|Contact whereCompany($value)
- * @method static Builder<static>|Contact whereCreatedAt($value)
- * @method static Builder<static>|Contact whereDeletedAt($value)
- * @method static Builder<static>|Contact whereDisplayName($value)
- * @method static Builder<static>|Contact whereFirstName($value)
- * @method static Builder<static>|Contact whereId($value)
- * @method static Builder<static>|Contact whereJobTitle($value)
- * @method static Builder<static>|Contact whereLastName($value)
- * @method static Builder<static>|Contact whereTitle($value)
- * @method static Builder<static>|Contact whereType($value)
- * @method static Builder<static>|Contact whereUpdatedAt($value)
- * @method static Builder<static>|Contact withTrashed()
- * @method static Builder<static>|Contact withoutTrashed()
- *
- * @mixin \Eloquent
- */
 class Contact extends Model
 {
     use SoftDeletes;
@@ -132,8 +48,8 @@ class Contact extends Model
     protected function name(): Attribute
     {
         return Attribute::make(
-            get: fn () => match ($this->type) {
-                ContactType::Person => $this->title.' '.$this->first_name.' '.$this->last_name,
+            get: fn() => match ($this->type) {
+                ContactType::Person => $this->title . ' ' . $this->first_name . ' ' . $this->last_name,
                 ContactType::Company => $this->company,
             }
         );
@@ -234,44 +150,5 @@ class Contact extends Model
         return $this->tels()->one()->where('is_primary', true);
     }
 
-    public function additionalAddresses(): HasMany
-    {
-        return $this->hasMany(Address::class, 'contact_id')->where('is_primary', false);
-    }
 
-    public function additionalEmails(): HasMany
-    {
-        return $this->hasMany(Email::class, 'contact_id')->where('is_primary', false);
-    }
-
-    public function additionalTels(): HasMany
-    {
-        return $this->HasMany(Tel::class, 'contact_id')->where('is_primary', false);
-    }
-
-    public function notes(): BelongsToMany
-    {
-        return $this->belongsToMany(Note::class, 'notes_contacts');
-    }
-
-    public function events(): HasMany
-    {
-        return $this->HasMany(Event::class, 'client_id');
-    }
-
-    public function relatedEvents(): HasMany
-    {
-        // TODO link in other stuff (events_contacts, venues)
-        return $this->HasMany(Event::class, 'client_id');
-    }
-
-    public function tasks(): MorphToMany
-    {
-        return $this->morphToMany(Task::class, 'link', 'tasks_links');
-    }
-
-    public function user(): HasOne
-    {
-        return $this->hasOne(User::class, 'contact_id', 'id');
-    }
 }
